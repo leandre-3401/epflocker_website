@@ -22,12 +22,4 @@ You’ll typically find:
 - **MySQL / MariaDB**
 - (Optional) **phpMyAdmin** to import the SQL dump
 
----
 
-## Local setup
-
-### 1) Clone the project
-
-```bash
-git clone https://github.com/leandre-3401/epflocker_website.git
-cd epflocker_website
