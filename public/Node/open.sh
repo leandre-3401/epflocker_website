@@ -1,0 +1,1 @@
+chromium-browser --incognito --start-fullscreen https://192.168.138.102:8080/powerAll.html

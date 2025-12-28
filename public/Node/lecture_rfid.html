@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+        <head>
+            
+           
+              <!-- Basic -->
+                <meta charset="utf-8" />
+                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <!-- Mobile Metas -->
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                <!-- Site Metas -->
+                <meta name="keywords" content="" />
+                <meta name="description" content="" />
+                <meta name="author" content="" />
+                <meta name="viewport" content="width-device-width, initial-scale-1.0"/>
+                <link href="css/style.css" rel="stylesheet" />
+  
+
+                <title>EPF Locker</title>
+                <link rel="website icon" type="png" href="./images/logo1.png">
+                
+              
+            <script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
+            <script src="./socket.io/socket.io.js"></script>
+            <script>
+
+                    function setCookie(name, value, days) {
+                            const date = new Date();
+                            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Conversion des jours en millisecondes
+                        
+                            const expires = "expires=" + date.toUTCString();
+                            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+                        }
+                //$(document).ready(function() {
+                $(function() {
+				
+                            var MaVar ='';
+                            var socket = io.connect('https://192.168.138.102:8080');
+                            socket.emit('message', 'Rfid');
+                            socket.on('message', function(message) {
+                                if(message.slice(0,2) ==="R:"){
+                                    setCookie("Id_Rfid", message.slice(2,message.length), 1);
+                                    window.location.href = "https://epflocker.mde.epf.fr/authentification.php"; 
+                                    
+                                    // Initialise la variable dans l'iframe
+                                    //var variable = 'redir';
+
+                                    // Envoie la variable à la page parente
+                                    //parent.postMessage(variable, 'http://localhost/service.php');
+
+                                    
+                                } 
+                                else{
+                                    window.location.href ="https://epflocker.mde.epf.fr";
+                                }
+                                //print(x[1:]);
+                                $('#logs').html(message);
+
+                                //Mavar=message;
+                               // setCookie("Id_Rfid", message, 1);
+                                //faire un renvoie vers service
+
+                            
+                            });
+                
+                            
+
+                });
+            </script>
+            <script>
+              // JavaScript pour masquer le contenu après un délai simulé
+              window.addEventListener('load', function() {
+                var loadingContainer = document.querySelector('.loading-container');
+                var progressBar = document.querySelector('.progress-bar');
+          
+                // Simuler un délai de chargement de 2 secondes
+                setTimeout(function() {
+                  loadingContainer.style.display = 'none'; // Masquer le conteneur de chargement
+                  progressBar.style.display = 'none'; // Masquer la barre de progression
+                  // Afficher le contenu principal ou effectuer d'autres actions
+                }, 3100);
+              });
+            </script> 
+        </head>
+
+        <body>
+            
+          
+            
+            <!-- service section -->
+            <section class="service_section layout_padding">
+              <div class="container-fluid">
+                <div class="heading_container">
+                  <h2>
+                  Badgez votre carte  étudiante
+                  </h2>
+                  <p id ="test" href="">
+                    Placez-la sur le lecteur NFC avant la fin du temps...
+                  </p>
+                 
+                </div>
+                <div class="service_container">
+                  <div class="box">
+                    <div class="img-box">
+                      <button id="btn1" class="service_container">
+                       <a href=""> 
+                      <img id="test" src="./images/carte_etudiante.png" alt="" style="width:200px;height:200px;">
+                       </a>
+                      </button>
+                    </div>
+                    
+                    <div class="detail-box">
+                      <h5>
+                        Placez votre carte sur le lecteur NFC
+                      </h5>
+          
+                    </div>
+          
+                  </div>
+          
+                
+                
+                 
+                </div>
+
+                <div class="btn-box">
+                  <a href="https://epflocker.mde.epf.fr">
+                    Déconnexion 
+                  </a>
+                </div>
+              </div>
+            </section>
+            <!-- end service section -->
+           
+            <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+            <script type="text/javascript" src="js/bootstrap.js"></script>
+            <script type="text/javascript" src="js/custom.js"></script>
+          
+          
+        
+          </body>
+</html>

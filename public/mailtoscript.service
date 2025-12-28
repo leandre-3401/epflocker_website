@@ -1,0 +1,8 @@
+[Unit]
+Description=Script de messagerie
+
+[Service]
+ExecStart=/usr/bin/php /var/www/html/EPF_Locker2/public/mailto.php
+
+[Install]
+WantedBy=default.target

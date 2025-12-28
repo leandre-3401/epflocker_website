@@ -1,0 +1,1 @@
+^C & sleep 0.1 && node /var/www/html/EPF_Locker2/public/Node/arduino.js

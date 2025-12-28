@@ -1,0 +1,145 @@
+.overlayreset{
+    position:fixed;
+    left: 30%;
+    top: 50%;
+    background-color: rgb(60, 3, 153);
+    height:150px;
+    border-radius: 5px;
+    display: none;
+    box-shadow : 8px 20px 0 rgba(0,0,0, 0.5);
+    color : white;
+    z-index: 99999; /* Mettre le popup au premier plan */
+
+
+}
+
+.popupreset{
+    text-align: center;
+    
+}
+
+
+.btnretourreset{
+    float : left;
+    cursor: pointer;
+    color : white;
+
+}
+
+.btnsuivantreset{
+    float : right;
+    cursor: pointer;
+    color : white;
+
+}
+
+
+
+
+
+
+.overlayblock{
+    position:fixed;
+    left: 30%;
+    top: 50%;
+    background-color: rgba(51, 6, 156, 0.952);
+    height:150px;
+    border-radius: 5px;
+    display: none;
+    /*box-shadow : 8px 20px 0 rgba(0,0,0, 0.5);*/
+    color : white;
+    z-index: 99999; /* Mettre le popup au premier plan */
+ 
+ 
+}
+
+.popupblock{
+    text-align: center;
+    
+}
+
+
+.btnretourblock{
+    float : left;
+    cursor: pointer;
+    color : white;
+
+}
+
+.btnsuivantblock{
+    float : right;
+    cursor: pointer;
+    color : white;
+
+}
+
+
+.overlaychanger{
+    position:fixed;
+    left: 30%;
+    top: 50%;
+    background-color: rgb(60, 3, 153);
+    height:150px;
+    border-radius: 5px;
+    display: none;
+    box-shadow : 8px 20px 0 rgba(0,0,0, 0.5);
+    color : white;
+    z-index: 99999; /* Mettre le popup au premier plan */
+
+
+}
+
+.popupchanger{
+    text-align: center;
+    
+}
+
+
+.btnretourchanger{
+    float : left;
+    cursor: pointer;
+    color : white;
+
+}
+
+.btnsuivantchanger{
+    float : right;
+    cursor: pointer;
+    color : white;
+
+}
+
+.overlayechanger{
+    position:fixed;
+    left: 30%;
+    top: 50%;
+    background-color: rgb(60, 3, 153);
+    height:150px;
+    border-radius: 5px;
+    display: none;
+    box-shadow : 8px 20px 0 rgba(0,0,0, 0.5);
+    color : white;
+    z-index: 99999; /* Mettre le popup au premier plan */
+
+
+}
+
+.popupechanger{
+    text-align: center;
+    
+}
+
+
+.btnretourechanger{
+    float : left;
+    cursor: pointer;
+    color : white;
+
+}
+
+.btnsuivantechanger{
+    float : right;
+    cursor: pointer;
+    color : white;
+
+}

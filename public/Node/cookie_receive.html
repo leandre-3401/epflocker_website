@@ -1,0 +1,44 @@
+
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Récupération de cookie</title>
+  </head>
+  <body>
+    <h1>Récupération de cookie</h1>
+
+    <script>
+      function getCookie(name) {
+        const cookieName = name + "=";
+        const cookies = document.cookie.split(';');
+      
+        for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i];
+      
+          while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1);
+          }
+      
+          if (cookie.indexOf(cookieName) === 0) {
+            return cookie.substring(cookieName.length, cookie.length);
+          }
+        }
+      
+        return null;
+      }
+      
+      // Récupération de la valeur du cookie nommé "monCookie"
+      const cookieValue = getCookie("monCookie");
+      
+      // Affichage de la valeur du cookie
+      if (cookieValue) {
+        document.write("Valeur du cookie 'monCookie' : " + cookieValue);
+      } else {
+        document.write("Cookie 'monCookie' non trouvé !");
+      }
+    </script>
+  </body>
+</html>

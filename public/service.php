@@ -1,0 +1,1084 @@
+<?php
+include('getIP.php');
+$IP = getIP();
+if ($IP == "192.168.138.102"){
+  
+  ?>
+
+<?php
+
+
+require '../inc/bdd.php';
+
+
+/*if ($_COOKIE["Id_Rfid"]){
+  $idRfid=$_COOKIE["Id_Rfid"];
+  // Prend la valeur du badge soit je recup le mail ou alors j'attribue le mail grâce à la connexion Azure
+
+
+//$Adresse_mail = "anthony.navarro@epfedu.fr";
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Casiers_Emprunt`');
+    $stmt = $db->query('SELECT  Adresse_mail FROM RFID WHERE Id_Rfid='.$idRfid.'');
+   // $stmt->bindParam(':badge', $idRfid);
+    $resultats = $stmt->fetchAll();
+    foreach ($resultats as $row) {
+        $Adresse_mail = $row['Adresse_mail']; //récupère la vlaeur de l'adresse mail 
+      }
+    if($Adresse_mail=="None"){
+        echo"Il faut attribuer une adresse mail !";
+        // conexxion Azure 
+        
+        include '../inc/auth.php';
+        $Auth = new modAuth();
+        $Adresse_mail = $Auth->userName;
+      //Adresse_mail="hugo.lacombe@epfedu.fr";
+        //on rentre l'adresse mail correspondant à la vlaeur du badge 
+        
+        $stmt1 = $db->prepare('UPDATE RFID SET Adresse_mail = :adresse WHERE Id_Rfid = :badge');
+        $stmt1->bindParam(':badge', $idRfid);
+        $stmt1->bindParam(':adresse', $Adresse_mail);
+        $stmt1->execute();
+    }
+
+    
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+}else{
+//$retour="http://localhost/service.php";
+ //Load the auth module, this will redirect us to login if we aren't already logged in.
+include '../inc/auth.php';
+$Auth = new modAuth();
+$Adresse_mail = $Auth->userName;
+//header("Location : http://localhost/service.php?Adresse_mail=" . urlencode($Adresse_mail));
+
+
+}
+
+*/
+
+//include '../inc/auth.php';
+//$Auth = new modAuth();
+
+
+
+
+$variableRequete = 'Adresse_mail';
+
+$PresenceEmprunt = 0;
+$PresenceDepot = 0;
+$PresenceCable = 0;
+$PresenceRallonge = 0;
+$PresenceSouris = 0;
+
+$casier_emprunt_libre = 0;
+$casier_emprunt_cables = 0;
+$casier_emprunt_libreservice = 0;
+$casier_emprunt_rallonge = 0;
+$casier_emprunt_souris = 0;
+
+$table = 'rien';
+
+// Include Azure si ID = none dans la table_courante -------------------------------------------------------------------------
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $db->query('SELECT Id_Badge FROM table_courante');
+    $resultats = $stmt->fetchAll();
+    $Badge = $resultats[0]['Id_Badge'];
+
+    if($Badge == "None"){
+      include '../inc/auth.php';
+      $Auth = new modAuth();
+      //echo $Badge;
+    }else{
+      //echo $Badge;
+    }
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+// Récup adresse mail dans la table_courante -------------------------------------------------------------------------
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $db->query('SELECT Adresse_mail FROM table_courante');
+    $resultats = $stmt->fetchAll();
+
+    $Adresse_mail = $resultats[0]['Adresse_mail'];
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+
+//$Adresse_mail = 'anthony.navarro@epfedu.fr';
+
+
+
+//echo $Adresse_mail;
+
+
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Casiers_Emprunt`');
+    $stmt = $db->query('SELECT '. $variableRequete .' FROM `casiers_emprunt`');
+    $resultats = $stmt->fetchAll();
+    //$nblignesdanscasiersemprunt = count($resultats);
+
+if (count($resultats) == 0) {
+
+
+} else {
+        foreach ($resultats as $row)
+        {
+            if ($row['Adresse_mail'] == $Adresse_mail){
+            //print_r($row['Adresse_mail']); //Affichage de l'adresse mail uniquement
+            //echo "Je t'ai trouvé";
+            //echo "<br>";
+            $PresenceEmprunt = 1;
+            }else{
+            //echo "Je t'ai pas trouvé";
+            }
+
+            if ($row['Adresse_mail'] == NULL){
+              $casier_emprunt_libre = 1;
+              }
+
+        }
+        //$db->exec("INSERT INTO `personne` (Nom, Adresse_mail, Mdp) VALUES ('Test2', 'anthony2.navarro>
+}
+
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Cables`');
+    $stmt = $db->query('SELECT '. $variableRequete .' FROM `cables`');
+    $resultats = $stmt->fetchAll();
+
+if (count($resultats) == 0) {
+    $variable = 1;
+} else {
+        $variable = 0;
+        foreach ($resultats as $row)
+        {
+            if ($row['Adresse_mail'] == $Adresse_mail){
+            //print_r($row['Adresse_mail']); //Affichage de l'adresse mail uniquement
+            //echo "Je t'ai trouvé";
+            //echo "<br>";
+            $PresenceCable = 1;
+            }else{
+            //echo "Je t'ai pas trouvé";
+            }
+
+            if ($row['Adresse_mail'] == NULL){
+              $casier_emprunt_cables = 1;
+              }
+
+        }
+        //$db->exec("INSERT INTO `personne` (Nom, Adresse_mail, Mdp) VALUES ('Test2', 'anthony2.navarro>
+}
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Casiers_Libre_Service`');
+    $stmt = $db->query('SELECT '. $variableRequete .' FROM `casiers_libre_service`');
+    $resultats = $stmt->fetchAll();
+
+if (count($resultats) == 0) {
+
+    
+          
+  
+    //echo " MySQL a retourné un résultat vide.";
+} else {
+        foreach ($resultats as $row)
+        {
+            if ($row['Adresse_mail'] == $Adresse_mail){
+            //print_r($row['Adresse_mail']); //Affichage de l'adresse mail uniquement
+            //echo "Je t'ai trouvé";
+            //echo "<br>";
+            $PresenceDepot = 1;
+            }else{
+            //echo "Je t'ai pas trouvé";
+            }
+
+            if ($row['Adresse_mail'] == NULL){
+              $casier_emprunt_libreservice = 1;
+              }
+        }
+        //$db->exec("INSERT INTO `personne` (Nom, Adresse_mail, Mdp) VALUES ('Test2', 'anthony2.navarro>
+}
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Rallonge`');
+    $stmt = $db->query('SELECT '. $variableRequete .' FROM `rallonge`');
+    $resultats = $stmt->fetchAll();
+
+if (count($resultats) == 0) {
+    $variable1 = 1;
+    //echo " MySQL a retourné un résultat vide.";
+} else {
+  
+        $variable1 = 0;
+        foreach ($resultats as $row)
+        {
+            if ($row['Adresse_mail'] == $Adresse_mail){
+            //print_r($row['Adresse_mail']); //Affichage de l'adresse mail uniquement
+            //echo "Je t'ai trouvé";
+            //echo "<br>";
+            $PresenceRallonge = 1;
+            }else{
+            //echo "Je t'ai pas trouvé";
+            }
+
+            if ($row['Adresse_mail'] == NULL){
+              $casier_emprunt_rallonge = 1;
+            }
+        }
+        //$db->exec("INSERT INTO `personne` (Nom, Adresse_mail, Mdp) VALUES ('Test2', 'anthony2.navarro>
+}
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+
+
+try
+{
+    $db = new PDO ('mysql:host=localhost;dbname=epflocker_db',$user,$pass); //Ici je suis en local donc>    
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    //$stmt = $db->query('SELECT '. $variableRequete .' FROM `Rallonge`');
+    $stmt = $db->query('SELECT '. $variableRequete .' FROM `souris`');
+    $resultats = $stmt->fetchAll();
+
+if (count($resultats) == 0) {
+  $variable2 = 1;
+    //echo " MySQL a retourné un résultat vide.";
+} else {
+        $variable2 = 0;
+        foreach ($resultats as $row)
+        {
+            if ($row['Adresse_mail'] == $Adresse_mail){
+            //print_r($row['Adresse_mail']); //Affichage de l'adresse mail uniquement
+            //echo "Je t'ai trouvé";
+            //echo "<br>";
+            $PresenceSouris = 1;
+            }else{
+            //echo "Je t'ai pas trouvé";
+            }
+             
+            if ($row['Adresse_mail'] == NULL){
+              $casier_emprunt_souris = 1;
+            }
+
+        }
+        //$db->exec("INSERT INTO `personne` (Nom, Adresse_mail, Mdp) VALUES ('Test2', 'anthony2.navarro>
+}
+}
+catch (PDOException $e)
+{
+    print "Erreur :" . $e->getMessage() . "<br/>";
+    die; //arrête tout le programme
+}
+
+?>
+
+
+
+<html>
+  
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <meta name="viewport" content="width-device-width, initial-scale-1.0"/>
+
+    <!-- popup -->
+    <link rel="stylesheet" href="stylepopup.css">
+    <link rel="stylesheet" href="stylepopupbddremplie.css">
+
+  <title>EPF Locker</title>
+  <link rel="website icon" type="png" href="images\logo1.png">
+
+
+
+
+  
+  <!-- slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600,700&display=swap" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="css/responsive.css" rel="stylesheet" />
+</head>
+<!--onselectstart="return false" oncontextmenu="return false" ondragstart="return false" onMouseOver="window.status='..message perso .. '; return true;"-->
+<body  >
+<div class="hero_area"><!-- bar de Navigation + liens et styles css -->
+
+  <?php /* $navbar="Explain.php";
+  $lien_retour = "";
+  $btn_retour = false;
+  include('Navbar.php');*/?>
+
+  <style>
+        .mail-div {
+            position: fixed;
+            top: 0;
+            right: 0;
+            color: white;
+            padding: 10px;
+        }
+    </style>
+
+<div class="mail-div"><?php echo $Adresse_mail; ?></div>
+
+  
+  <!-- service section -->
+  <section class="service_section layout_padding">
+    <div class="container-fluid">
+      <div class="heading_container">
+        <h2>
+          Nos services
+        </h2>
+        <p id ="test" href="enregistrement_loc.php">
+          Que pouvons nous faire pour vous aujourd'hui ?
+        </p>
+        
+
+
+
+      </div>
+      <div class="service_container">
+        <div class="box">
+          <div class="img-box">
+            <button id="btn1" class="service_container">
+              <!-- <a href="Page_emprunt.html"> -->
+              <img src="images/image_ordi.png" alt="" style="width:220px;height:220px;">
+              <!-- </a> -->
+            </button>
+          </div>
+          
+          <div class="detail-box">
+            <h5>
+              <?php
+                if ($PresenceEmprunt == 1) {
+                 echo "Rendre un ordinateur";
+                } else {
+                  echo "Emprunter un ordinateur";
+                }
+              ?>
+            </h5>
+
+          </div>
+
+
+
+          <?php
+          if($casier_emprunt_libre == 0 && $PresenceEmprunt == 0){
+            //Afficher le popup de retour car tous casiers pris
+
+          ?>
+
+          <div id="overlay" class = "overlay">
+            <div id = "popup" class = "popup">
+                <h2>Nous sommes désolés, tous les ordinateurs sont empruntés.
+
+                </h2>
+
+                <h2>
+
+                </h2>
+
+                <span id = "btnretour" class = "btnretour">
+                        Retour
+                </span>
+
+            </div>
+
+          </div>
+          
+
+          <?php
+            } elseif($casier_emprunt_libre == 1 && $PresenceEmprunt == 0) {
+              $typeaction = "Emprunter";
+              $table = "casiers_emprunt";
+          ?>
+                  <div id="overlay" class = "overlay">
+                    <div id = "popup" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir continuer ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+                  <?php
+            } else {
+              $typeaction = "Rendre";
+              $table = "casiers_emprunt";
+          ?>
+
+
+                  <div id="overlay" class = "overlay">
+                    <div id = "popup" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir rendre l'ordinateur ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+          <?php
+            }
+          ?>
+
+
+        </div>
+
+        
+
+        <div class="box">
+
+
+          <div class="img-box">
+
+            <?php
+            $disabled = ($variable == 1 /* insérez ici la valeur qui désactive le bouton */) ? 'disabled' : '';
+            // Génération du code HTML du bouton avec la condition et l'attribut disabled si nécessaire
+            echo '<button id="btn2" class="service_container" ' . $disabled . '>
+                    <!--<a>-->
+                    <img src="images/cable_hdmi.png" alt="">
+                    <!--</a>-->
+                  </button>';
+            ?>
+            
+          </div>
+          
+          <div class="detail-box">
+            <h5>
+            <?php
+                if ($PresenceCable == 1) {
+                 echo "Rendre Cable";
+                } else {
+                  echo "Emprunter Cable";
+                }
+              ?>
+            </h5>
+            
+          </div>
+
+          <?php
+           if($PresenceCable == 0){
+            $typeaction = "Emprunter";
+            $table = 'cables';
+
+          ?>
+
+                  <div id="overlay2" class = "overlay">
+                    <div id = "popup2" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir continuer ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour2" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant2" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+                  
+
+                  <?php
+            } else {
+              $typeaction = "Rendre";
+              $table = 'cables';
+          ?>
+
+                  
+                  
+
+                  <div id="overlay2" class = "overlay">
+                    <div id = "popup2" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir rendre le cable ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour2" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant2" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+          
+          <?php
+            }
+          ?>
+
+
+        </div>
+        
+
+
+
+
+
+        <div class="box">
+          <div class="img-box">
+          
+          <?php
+
+            $disabled1 = ($variable1 == 1 /* insérez ici la valeur qui désactive le bouton */) ? 'disabled' : '';
+
+            // Génération du code HTML du bouton avec la condition et l'attribut disabled si nécessaire
+            echo '<button id="btn3" class="service_container" ' . $disabled1 . '>
+                    <img src="images/image_rallonge.png" alt="" style="width:150px;height:180px;">
+                  </button>';
+          ?>
+          </div>
+
+          <div class="detail-box">
+            <h5>
+              <?php
+                if ($PresenceRallonge == 1) {
+                 echo "Rendre Rallonge";
+                } else {
+                  echo "Emprunter Rallonge";
+                }
+              ?>
+            </h5>
+          
+          </div>
+
+          <?php
+           if($PresenceRallonge == 0){
+            $typeaction = "Emprunter";
+            $table = 'rallonge';
+
+          ?>
+
+                  <div id="overlay3" class = "overlay">
+                    <div id = "popup3" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir continuer ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour3" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant3" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+                  
+
+                  <?php
+            } else {
+              $typeaction = "Rendre";
+              $table = 'rallonge';
+          ?>
+
+                  
+                  
+
+                  <div id="overlay3" class = "overlay">
+                    <div id = "popup3" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir rendre la rallonge ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour3" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant3" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+          <?php
+            }
+          ?>
+
+        </div>
+
+
+        <div class="box">
+          <div class="img-box">
+            <button id = "btn5" class = "service_container">
+            <img src="images/icone_casier2.png"  alt="" style="width:175px;height:175px;">
+          </button>
+          </div>
+          <div class="detail-box">
+            <h5>
+              <?php
+                if ($PresenceDepot == 1) {
+                 echo "Rendre le Casier";
+                } else {
+                  echo "Emprunter un Casier";
+                }
+              ?>
+            </h5>
+          
+          </div>
+
+          <?php
+          if($casier_emprunt_libreservice== 0 && $PresenceDepot == 0){
+            //Afficher le popup de retour car tous casiers pris
+
+          ?>
+
+          <div id="overlay5" class = "overlay">
+            <div id = "popup5" class = "popup">
+                <h2>Nous sommes désolés, tous les casiers sont empruntés.
+
+                </h2>
+
+                <h2>
+
+                </h2>
+
+                <span id = "btnretour5" class = "btnretour">
+                        Retour
+                </span>
+
+            </div>
+
+          </div>
+          
+
+          <?php
+            } elseif($casier_emprunt_libreservice == 1 && $PresenceDepot == 0) {
+              $typeaction = "Emprunter";
+              $table = "casiers_depot";
+          ?>
+                  <div id="overlay5" class = "overlay">
+                    <div id = "popup5" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir continuer ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour5" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant5" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+                  <?php
+            } else {
+              $typeaction = "Rendre";
+              $table = "casiers_depot";
+          ?>
+
+
+                  <div id="overlay5" class = "overlay">
+                    <div id = "popup5" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir libérer le casier ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour5" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant5" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+          <?php
+            }
+          ?>
+          
+        </div>
+
+
+
+
+
+        
+
+        <div class="box">
+          <div class="img-box">
+            <?php
+            
+              // Vérification de la valeur de la variable pour déterminer si le bouton doit être désactivé
+              $disabled2 = ($variable2 == 1 /* insérez ici la valeur qui désactive le bouton */) ? 'disabled' : '';
+
+              // Génération du code HTML du bouton avec la condition et l'attribut disabled si nécessaire
+              echo '<button id="btn4" class="service_container" ' . $disabled2 . '>
+                      <img src="images/souris_.png" alt="" style="width:150px;height:150px;">
+                    </button>';
+              ?>
+          </div>
+
+          <div class="detail-box">
+            <h5>
+              <?php
+                if ($PresenceSouris == 1) {
+                 echo "Rendre la souris";
+                } else {
+                  echo "Emprunter une souris";
+                }
+              ?>
+            </h5>
+          
+          </div>
+
+          <?php
+           if($PresenceSouris == 0){
+            $typeaction = "Emprunter";
+            $table = 'souris';
+
+          ?>
+
+                  <div id="overlay4" class = "overlay">
+                    <div id = "popup4" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir continuer ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour4" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant4" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+
+                  
+
+                  <?php
+            } else {
+              $typeaction = "Rendre";
+              $table = 'souris';
+          ?>
+
+                  
+                  
+
+                  <div id="overlay4" class = "overlay">
+                    <div id = "popup4" class = "popup">
+                        <h2>Es-tu sûr(e) de vouloir libérer le casier ? 
+                        </h2>
+
+                        <p>Tu peux retourner en arrière, sans conséquences.
+                        </p>
+
+                        <h2>
+                        </h2>
+
+                        <span id = "btnretour4" class = "btnretour">
+                                Retour
+                        </span>
+
+                        <a id="btnsuivant4" class="btnsuivant" href="test_popbdd.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>&typeaction=<?php echo urlencode($typeaction); ?>&table=<?php echo urlencode($table); ?>">
+                          Suivant
+                        </a>
+
+                    </div>
+
+                  </div>
+
+                  <link rel = "stylesheet" type = "text/css" href = "stylepopup.css">
+                  <script src = "js/script_popup.js"></script>
+
+          <?php
+            }
+          ?>
+
+          </div>
+       
+
+      </div>
+
+
+        
+      
+
+
+  <div class="btn-box">
+        <a id="btn_deco"  onclick="relancerNavigateur()">Déconnexion</a>
+      </div>
+  
+
+
+
+<div class="btn-box">
+      <a id="boite" href = "https://epflocker.mde.epf.fr/boite_aux_l.php?Adresse_mail=<?php echo urlencode($Adresse_mail); ?>" style="position: absolute; bottom: 100px; right: 100px;">Boîte aux lettres</a>
+    
+  </div>
+
+
+  </div>
+
+  </section>
+  </div>
+
+
+
+
+  <script>
+function relancerNavigateur() {
+  // Ouvrir la première URL dans un nouvel onglet
+  //var nouvelleOnglet1 = window.open("https://epflocker.mde.epf.fr", "_blank");
+  
+  var nouvelleOnglet2 = window.open("https://epflocker.mde.epf.fr/service.php?action=logout", "_blank");
+
+  // Temporisation de 4 secondes (4000 millisecondes) avant d'ouvrir la deuxième URL
+  setTimeout(function() {
+    // Ouvrir la deuxième URL dans un nouvel onglet
+
+    // Redirection vers "https://192.168.138.102:8080/page_deco.html"
+    window.location.href = "https://192.168.138.102:8080/page_deco.html";
+  }, 3000);
+}
+</script>
+
+
+
+
+  <script>
+  setTimeout(relancerNavigateur, 30000);
+  </script>
+ 
+  
+  <script type="text/javascript">
+    //inactivité 
+              // Fonction pour effectuer la redirection après un délai spécifié en millisecondes
+              function rediriger() {
+                  window.location.href = "https://epflocker.mde.epf.fr"; // Remplacez l'URL par celle souhaitée
+              }
+      
+              // Temporisation de 1 minute (60 000 millisecondes) avant de lancer la redirection
+              
+          </script>
+  <!-- end service section -->
+ 
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.js"></script>
+  <script type="text/javascript" src="js/custom.js"></script>
+  <script src = "js/script_popup.js"></script>
+  <script src = "js/script_popupbddremplie.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
+
+
+<?php
+}else{
+    echo "<h1>Not Found</h1><br>";
+    echo "The requested URL was not found on this server.";
+
+    ?>
+    <title>404 Not Found</title>
+    <?php
+
+}
+
+?>

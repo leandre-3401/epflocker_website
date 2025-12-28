@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            text-align: center;
+            background-color: rgb(255, 234, 46);
+        }
+
+        .casiers-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .croix {
+            position: absolute;
+            top: 75px;
+            left: 120px;
+            width: 50px;
+            height: 42px;
+            pointer-events: none;
+    }
+    
+
+  </style>
+    
+    <title>Casiers disponibles</title>
+
+</head>
+
+<body>
+<h1>
+        Voici l'armoire, choisissez un casier disponible !
+    </h1>
+
+    <div class="casiers-container">
+        <img src="./images/Casiers.png" usemap="#Casiers_map" alt="Image des casiers" />
+
+        <div class="croix" id="croixA1">
+            <img src="./images/Croix.png" width="50" height="42" alt="Croix" />
+        </div>
+    </div>
+
+    <map name="Casiers_map">
+        <area shape="rect" coords="121,37,169,112" href="#" alt="A1" id="A1" title="Casier A1" />
+        <area shape="rect" coords="174,35,226,112" href="#" alt="B1" id="B1" title="Casier B1" />
+    </map>
+
+
+    <script>
+        function casierPrisA1() {
+            console.log("Casier A1 pris");
+        }
+
+        document.querySelector("#A1").addEventListener("click", casierPrisA1);
+    </script>
+</body>
+
+</html>

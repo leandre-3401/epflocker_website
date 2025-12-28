@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Création de cookie</title>
+  </head>
+  <body>
+    <h1>Création de cookie</h1>
+
+    <script>
+      function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Conversion des jours en millisecondes
+      
+        const expires = "expires=" + date.toUTCString();
+        document.cookie = name + "=" + value + ";" + expires + ";path=/";
+      }
+      
+      // Utilisation de la fonction setCookie pour créer un cookie nommé "monCookie" avec la valeur "Hello" et une durée de validité de 7 jours
+      setCookie("name", "Heeaea", 0.1);
+      setCookie("naea","aea",1)
+    </script>
+  </body>
+</html>
